@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling>=1.18"]
+build-backend = "hatchling.build"
+
+[project]
+name = "syncfusion-a2ui-examples"
+version = "0.1.0"
+description = "Runnable demo agents for the syncfusion-a2ui-agent ADK"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Syncfusion" }]
+keywords = ["a2ui", "a2a", "syncfusion", "agent", "examples", "demos"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+# This package is fully independent of the ADK's own pyproject.toml.
+# The ADK is consumed via PyPI; for local editable development install
+# the ADK from a sibling checkout with `pip install -e ../syncfusion-a2ui-agent`
+# before installing this package.
+dependencies = [
+    "syncfusion-a2ui-agent>=0.1.0,<0.4.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.5",
+]
+
+[project.scripts]
+# After `pip install -e examples/`, these become available on PATH:
+contoso-demo      = "examples.generic_demo_agent:main"
+flight-booking    = "examples.flight_booking_agent:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["examples"]
+

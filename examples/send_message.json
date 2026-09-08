@@ -1,0 +1,1 @@
+﻿{"jsonrpc":"2.0","id":"1","method":"message/send","params":{"message":{"kind":"message","message_id":"req-1","role":"user","parts":[{"text":"Build a small dashboard with a header, 3 KPI cards, and a data table placeholder."}]}}}

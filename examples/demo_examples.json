@@ -1,0 +1,176 @@
+{
+  "company": {
+    "name": "Contoso Dynamics",
+    "fiscalYear": "FY2026",
+    "currency": "USD"
+  },
+
+  "kpis": {
+    "revenue": "$4.2M",
+    "customers": "18,400",
+    "margin": "62.3%",
+    "sla": "97.8%",
+    "bookings": "$12.8M",
+    "avgDeal": "$48K",
+    "salesCycle": "32 Days",
+    "pipelineCoverage": "3.4x"
+  },
+
+  "monthlyRevenue": [
+    { "month": "Jan", "actual": 320, "target": 300 },
+    { "month": "Feb", "actual": 340, "target": 320 },
+    { "month": "Mar", "actual": 360, "target": 340 },
+    { "month": "Apr", "actual": 390, "target": 370 },
+    { "month": "May", "actual": 420, "target": 400 },
+    { "month": "Jun", "actual": 450, "target": 430 }
+  ],
+
+  "salesReps": [
+    {
+      "name": "Sophia Williams",
+      "region": "North America",
+      "pipeline": "$1.2M",
+      "deals": 32,
+      "winRate": "74%"
+    },
+    {
+      "name": "Henry Martin",
+      "region": "Europe",
+      "pipeline": "$980K",
+      "deals": 27,
+      "winRate": "70%"
+    },
+    {
+      "name": "Emma Johnson",
+      "region": "APAC",
+      "pipeline": "$870K",
+      "deals": 25,
+      "winRate": "68%"
+    }
+  ],
+
+  "employees": [
+    {
+      "id": "EMP001",
+      "name": "Emma Johnson",
+      "department": "Engineering",
+      "title": "Senior Engineer",
+      "location": "Seattle",
+      "status": "Active"
+    },
+    {
+      "id": "EMP002",
+      "name": "James Wilson",
+      "department": "Sales",
+      "title": "Account Manager",
+      "location": "New York",
+      "status": "Active"
+    }
+  ],
+
+  "transactions": [
+    {
+      "id": "TX1001",
+      "date": "2026-07-01",
+      "description": "Customer Payment",
+      "credit": "$24,000",
+      "debit": "$0",
+      "status": "Credit"
+    },
+    {
+      "id": "TX1002",
+      "date": "2026-07-03",
+      "description": "Cloud Subscription",
+      "credit": "$0",
+      "debit": "$4,800",
+      "status": "Debit"
+    }
+  ],
+
+  "inventory": [
+    {
+      "sku": "SKU001",
+      "product": "Laptop Pro",
+      "warehouse": "Seattle",
+      "stock": 120,
+      "status": "In Stock"
+    },
+    {
+      "sku": "SKU002",
+      "product": "Monitor 27\"",
+      "warehouse": "Dallas",
+      "stock": 18,
+      "status": "Low Stock"
+    }
+  ],
+
+  "projects": [
+    {
+      "name": "AI Copilot",
+      "manager": "Emma Johnson",
+      "budget": "$2.5M",
+      "progress": 68,
+      "status": "On Track"
+    },
+    {
+      "name": "CRM Modernization",
+      "manager": "James Wilson",
+      "budget": "$1.8M",
+      "progress": 42,
+      "status": "At Risk"
+    }
+  ],
+
+  "vendors": [
+    {
+      "name": "Dell Technologies",
+      "country": "USA",
+      "status": "Approved"
+    },
+    {
+      "name": "Microsoft",
+      "country": "USA",
+      "status": "Pending"
+    }
+  ],
+
+  "purchaseOrder": {
+    "id": "PO-2026-00847",
+    "vendor": "Dell Technologies",
+    "total": "$52,536",
+    "status": "Finance Review"
+  },
+
+  "incidents": [
+    {
+      "id": "INC001",
+      "service": "API Gateway",
+      "severity": "High",
+      "status": "Open"
+    },
+    {
+      "id": "INC002",
+      "service": "Payments",
+      "severity": "Medium",
+      "status": "Resolved"
+    }
+  ],
+
+  "calendar": [
+    {
+      "title": "Daily Standup",
+      "start": "2026-07-21T09:00",
+      "end": "2026-07-21T09:30"
+    },
+    {
+      "title": "Customer Demo",
+      "start": "2026-07-22T10:00",
+      "end": "2026-07-22T11:00"
+    },
+    {
+      "title": "Sprint Planning",
+      "start": "2026-07-23",
+      "allDay": true
+    }
+  ]
+}

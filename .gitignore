@@ -1,0 +1,39 @@
+# Build / dist
+build/
+dist/
+*.egg-info/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Per-package .env files. Each package has its own .env.example; the
+# real .env files (with secrets) are git-ignored at every level.
+.env
+.env.*
+!.env.example
+
+examples/.env
+examples/.venv/
+examples/*.egg-info/
+
+node_modules/
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Playwright MCP debug snapshots
+.playwright-mcp/
+
+# Dev run logs and probe outputs
+*.log
+probe.out
+pytest.out
+validate_resp*.py

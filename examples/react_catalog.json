@@ -1,0 +1,34 @@
+{
+  "catalogId": "syncfusion-a2ui-catalog",
+  "version": "v0.9",
+  "description": "Syncfusion React A2UI renderer — all available components.",
+  "rules": [
+    "REQUIRED: Every response must contain BOTH createSurface AND updateComponents.",
+    "REQUIRED: The first component in updateComponents must have id='root'.",
+    "REQUIRED: Use catalogId 'syncfusion-a2ui-catalog' in createSurface.",
+    "REQUIRED: SyncfusionGrid uses prop 'dataSource' (NOT 'data') for row data.",
+    "REQUIRED: Use a unique surfaceId for every response."
+  ],
+  "components": {
+    "Column": {
+      "description": "Vertical flex container. id='root' for the root component. children: array of child component ids.",
+      "required": ["id"],
+      "props": { "id": "string", "children": "string[]", "weight": "number" }
+    },
+    "Row": {
+      "description": "Horizontal flex container. children: array of child component ids.",
+      "required": ["id"],
+      "props": { "id": "string", "children": "string[]", "weight": "number" }
+    },
+    "Text": {
+      "description": "Plain or heading text. variant: h1|h2|h3|body|caption.",
+      "required": ["id", "text"],
+      "props": { "id": "string", "text": "string", "variant": "string" }
+    },
+    "Button": {
+      "description": "Clickable button. content: label. cssClass: e-primary|e-danger|e-outline|e-flat|e-small.",
+      "required": ["id", "content"],
+      "props": { "id": "string", "content": "string", "cssClass": "string", "disabled": "boolean" }
+    }
+  }
+}

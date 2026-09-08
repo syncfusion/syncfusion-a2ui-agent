@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Syncfusion A2UI Agent — JSON Test Page</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --panel-2: #111827;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --err: #ef4444;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(15, 23, 42, 0.85);
+      position: sticky; top: 0; z-index: 5;
+    }
+    header h1 { margin: 0; font-size: 16px; font-weight: 600; }
+    header .sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    .status {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 5px 10px; border-radius: 999px;
+      background: var(--panel); border: 1px solid var(--border);
+      font-size: 12px; color: var(--muted);
+    }
+    .status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+    .status.ok .dot { background: var(--ok); }
+    .status.err .dot { background: var(--err); }
+    .status.busy .dot { background: var(--warn); animation: pulse 1s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 22px 60px;
+      display: flex; flex-direction: column; gap: 18px;
+    }
+    section.card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+    }
+    section.card h2 {
+      margin: 0 0 12px; font-size: 12px;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600;
+    }
+
+    textarea {
+      width: 100%; min-height: 90px; resize: vertical;
+      background: var(--panel-2); color: var(--text);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px; font-size: 14px; font-family: inherit;
+      outline: none;
+    }
+    textarea:focus { border-color: var(--accent); }
+
+    .row { display: flex; gap: 10px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+    .row input[type=text] {
+      flex: 1 1 240px;
+      background: var(--panel-2); color: var(--text);
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 9px 12px; font-size: 13px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    button {
+      background: linear-gradient(180deg, var(--accent) 0%, #818cf8 100%);
+      color: #0b1220; border: 0; border-radius: 8px;
+      padding: 9px 16px; font-weight: 600; font-size: 13px; cursor: pointer;
+      transition: transform 0.05s ease, box-shadow 0.15s ease;
+    }
+    button:hover { box-shadow: 0 4px 16px rgba(56,189,248,0.35); }
+    button:active { transform: translateY(1px); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+    button.ghost {
+      background: transparent; color: var(--text); border: 1px solid var(--border);
+    }
+    .examples { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .chip {
+      background: var(--panel-2); border: 1px solid var(--border);
+      color: var(--text); font-size: 12px; padding: 5px 10px;
+      border-radius: 999px; cursor: pointer;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+    .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .badge {
+      display: inline-block; padding: 2px 8px; border-radius: 999px;
+      font-size: 11px; font-weight: 600;
+      background: rgba(56,189,248,0.12); color: var(--accent);
+      border: 1px solid rgba(56,189,248,0.3);
+    }
+
+    pre.json {
+      margin: 0; background: #0a0f1d; border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px; overflow: auto;
+      max-height: 65vh; font-size: 12px; line-height: 1.55;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      color: #cbd5e1; white-space: pre;
+    }
+    .placeholder { color: var(--muted); font-style: italic; }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Syncfusion A2UI Agent — JSON Test Page</h1>
+      <div class="sub">POSTs <code>message/send</code> to <code id="endpointLabel">http://127.0.0.1:10004/</code> — shows the raw JSON-RPC response, no rendering.</div>
+    </div>
+    <div id="status" class="status"><span class="dot"></span><span id="statusText">Idle</span></div>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>Prompt</h2>
+      <textarea id="prompt" placeholder="Ask the agent…">Show me a Syncfusion Grid with three example rows: Alice (Admin), Bob (Viewer), Carol (Editor).</textarea>
+      <div class="row">
+        <input type="text" id="endpoint" value="http://127.0.0.1:10004/" />
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);">
+          <input type="checkbox" id="streamToggle" /> Stream (message/stream)
+        </label>
+        <button id="send">Send</button>
+        <button id="clear" class="ghost">Clear</button>
+        <button id="copy" class="ghost">Copy JSON</button>
+      </div>
+      <div class="examples">
+        <span class="chip" data-q="Show me a Syncfusion Grid with three example rows: Alice (Admin), Bob (Viewer), Carol (Editor).">Grid example</span>
+        <span class="chip" data-q="Show me 3 movies playing tonight in my city.">Movies tonight</span>
+        <span class="chip" data-q="Build a small dashboard with a header, 3 KPI cards, and a data table placeholder.">Dashboard</span>
+        <span class="chip" data-q="Suggest a confirmation dialog before charging a credit card.">Confirm dialog</span>
+      </div>
+      <div class="badges">
+        <span class="badge" id="lastDuration">—</span>
+        <span class="badge" id="lastState">—</span>
+        <span class="badge" id="lastArtifact">—</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Response (JSON-RPC)</h2>
+      <pre class="json" id="raw"><span class="placeholder">No response yet — send a prompt.</span></pre>
+    </section>
+  </main>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  const raw = $("raw");
+  const statusEl = $("status");
+  const statusText = $("statusText");
+  const endpointInput = $("endpoint");
+  $("endpointLabel").textContent = endpointInput.value;
+  endpointInput.addEventListener("change", () => {
+    $("endpointLabel").textContent = endpointInput.value;
+  });
+
+  function setStatus(kind, text) {
+    statusEl.className = "status " + (kind || "");
+    statusText.textContent = text;
+  }
+  function showJson(obj) {
+    raw.textContent = JSON.stringify(obj, null, 2);
+  }
+
+  // ---- chips ----
+  document.querySelectorAll(".chip").forEach((c) => {
+    c.addEventListener("click", () => { $("prompt").value = c.dataset.q; });
+  });
+
+  // ---- send ----
+async function send() {
+  const prompt = $("prompt").value.trim();
+  if (!prompt) { setStatus("err", "Empty prompt"); return; }
+  const endpoint = endpointInput.value.replace(/\/+$/, "") + "/";
+  const useStream = $("streamToggle") && $("streamToggle").checked;
+  setStatus("busy", "Sending…");
+  $("lastState").textContent = "—";
+  $("lastArtifact").textContent = "—";
+  $("lastDuration").textContent = "—";
+  raw.textContent = "";
+
+  const body = {
+    jsonrpc: "2.0",
+    id: String(Date.now()),
+    method: useStream ? "message/stream" : "message/send",
+    params: {
+      message: {
+        kind: "message",
+        message_id: "req-" + Date.now(),
+        role: "user",
+        parts: [{ text: prompt }],
+      },
+    },
+  };
+
+  const t0 = performance.now();
+  try {
+    const resp = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    if (useStream) {
+      await consumeStream(resp, t0);
+    } else {
+      const payload = await resp.json();
+      finishNonStream(payload, t0);
+    }
+  } catch (e) {
+    setStatus("err", "Network error");
+    showJson({ error: String(e) });
+  }
+}
+
+async function consumeStream(resp, t0) {
+  const reader = resp.body.getReader();
+  const decoder = new TextDecoder();
+  let buf = "";
+  let opCount = 0;
+  const surfaceIds = new Set();
+  const events = [];
+
+  // SSE frames are separated by a blank line. sse_starlette uses
+  // CRLF (\r\n\r\n) per the SSE spec, but be tolerant of LF-only
+  // (\n\n) too in case a proxy or older client strips the CR.
+  const splitRe = /\r\n\r\n|\n\n/;
+  const endsWithFrame = (s) => splitRe.test(s);
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += decoder.decode(value, { stream: true });
+    // Split off complete frames; leave any trailing partial frame
+    // in `buf` for the next read.
+    let cut;
+    while ((cut = buf.search(splitRe)) !== -1) {
+      const frame = buf.slice(0, cut);
+      // Advance past the separator (use the matched length).
+      const sepLen = buf.slice(cut, cut + 4) === "\r\n\r\n" ? 4 : 2;
+      buf = buf.slice(cut + sepLen);
+      if (!frame.startsWith("data: ")) continue;
+      let evt;
+      try { evt = JSON.parse(frame.slice(6).replace(/\r$/, "")); }
+      catch { continue; }
+      events.push(evt);
+      opCount++;
+      showJson(events);              // grow the JSON view op-by-op
+      setStatus("busy", `Streaming… (${opCount} events)`);
+      const sid = extractSurfaceId(evt);
+      if (sid) surfaceIds.add(sid);
+    }
+  }
+
+  const elapsedMs = performance.now() - t0;
+  $("lastDuration").textContent = formatDuration(elapsedMs);
+  if (opCount === 0) {
+    // Stream closed with no data at all — almost always means the
+    // server threw before emitting anything (check the server
+    // terminal for a traceback). Don't report this as success.
+    $("lastState").textContent = "no events (check server log)";
+    $("lastArtifact").textContent = "0 streamed event(s) — stream closed empty";
+    setStatus("err", "Stream closed with 0 events");
+    return;
+  }
+  $("lastState").textContent = "completed";
+  $("lastArtifact").textContent = `${opCount} streamed event(s), ${surfaceIds.size} surface(s)`;
+  setStatus("ok", "completed");
+}
+
+function extractSurfaceId(evt) {
+  try {
+    const artifact = evt.result && evt.result.artifact;
+    const part = artifact && artifact.parts && artifact.parts[0];
+    const data = part && part.data;
+    return data && data.surfaceIds && data.surfaceIds[0];
+  } catch { return null; }
+}
+
+function finishNonStream(payload, t0) {
+  const elapsedMs = performance.now() - t0;
+  $("lastDuration").textContent = formatDuration(elapsedMs);
+  showJson(payload);
+
+  if (payload && payload.error) {
+    setStatus("err", "Agent error: " + (payload.error.message || payload.error.code));
+    $("lastState").textContent = "error";
+    return;
+  }
+  const result = payload && payload.result;
+  if (!result) { setStatus("err", "Empty result"); return; }
+  const state = (result.status && result.status.state) || "ok";
+  setStatus("ok", state);
+  $("lastState").textContent = state;
+  const arts = result.artifacts || [];
+  const a2ui = arts.filter((a) => a.name === "a2ui-response");
+  $("lastArtifact").textContent = a2ui.length
+    ? `${a2ui.length} a2ui artifact(s)`
+    : `${arts.length} artifact(s)`;
+}
+
+function formatDuration(elapsedMs) {
+  const seconds = elapsedMs / 1000;
+  if (seconds < 1) return `${Math.round(elapsedMs)} ms`;
+  if (seconds < 60) return `${seconds.toFixed(2)} s`;
+  const m = Math.floor(seconds / 60);
+  const s = Math.round(seconds % 60);
+  return `${m}m ${s}s`;
+}
+  $("send").addEventListener("click", send);
+  $("clear").addEventListener("click", () => {
+    $("prompt").value = "";
+    showJson({ note: "cleared" });
+    $("lastDuration").textContent = "—";
+    $("lastState").textContent = "—";
+    $("lastArtifact").textContent = "—";
+    setStatus("", "Idle");
+  });
+  $("copy").addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(raw.textContent || "");
+      const old = $("copy").textContent;
+      $("copy").textContent = "Copied";
+      setTimeout(() => { $("copy").textContent = old; }, 1200);
+    } catch (e) {
+      setStatus("err", "Copy failed");
+    }
+  });
+  $("prompt").addEventListener("keydown", (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") send();
+  });
+</script>
+</body>
+</html>
