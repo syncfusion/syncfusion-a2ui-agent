@@ -23,10 +23,7 @@ The ADK's default system prompt includes a **starter catalog** of common Syncfus
 - [Skills](#skills)
 - [Build your own A2UI agent](#build-your-own-a2ui-agent)
 - [Design contract (`set_design`)](#design-contract-set_design)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Getting started](#getting-started)
+- [Quickstart: from checkout to a running agent](#quickstart-from-checkout-to-a-running-agent)
 - [Examples](#examples)
 - [FAQ](#faq)
 
@@ -251,57 +248,71 @@ When you pass a directory or a list, the agent concatenates every design into a 
 
 ---
 
-## Prerequisites
+## Quickstart: from checkout to a running agent
 
-- **Python** ≥ 3.10
-- **pip** ≥ 21 (for the `pyproject.toml` build system)
-- A valid **AI provider** API key, e.g.:
-  - **Azure OpenAI** (`AZURE_API_KEY` + `AZURE_API_BASE` + deployment)
-  - **OpenAI** (`OPENAI_API_KEY`)
-  - Google Gemini (`GOOGLE_API_KEY`)
-  - Anthropic Claude (`ANTHROPIC_API_KEY`)
-  - Ollama (local — no key, just a running server)
-  - DeepSeek and any other OpenAI-compatible endpoint — via a `CustomProvider` subclass (see [Adding a custom provider](#adding-a-custom-provider-deepseek-in-house-openai-compatible))
+Everything you need to go from a fresh machine to a running A2UI agent is in this one section — five short steps, end to end.
 
-  > **Which provider should I pick?** All six built-in providers (and any `CustomProvider` you register) are available in this beta release and are exercised by the test suite. Pick the one that fits your stack — there is no single "recommended" provider. In practice, GPT-class models (Azure OpenAI / OpenAI) tend to produce the fewest validation retries on real prompts, but the ADK is designed to work well with any of them. Choose based on your constraints: latency, cost, data-residency, an in-house model, etc.
-- *(Optional)* **Node.js ≥ 18** and `npx` on `PATH` if you want to register a Platform MCP that ships as an `npx` package (Syncfusion publishes `@syncfusion/react-mcp@latest` for the React renderer; other vendors publish their own).
-- *(Optional)* A **Syncfusion account API key** ([get one here](https://www.syncfusion.com/account/api-key)) passed as the `Syncfusion_API_Key` env var, only when consuming a Syncfusion-published Platform MCP. This is **not a product license** — it's the per-account key Syncfusion issues from your account dashboard. Third-party or in-house Platform MCPs do not require it.
+> **Platform note on `cp` vs `copy`.** This README uses the Unix `cp` command. macOS and Linux terminals (bash, zsh, fish) and Git Bash on Windows accept `cp` natively. PowerShell also accepts `cp` as an alias for `Copy-Item`, but **`cmd.exe` does not support `cp` — use `copy` instead.** If `cp` is not recognised in your shell, switch to the matching command below:
+>
+> | Shell | File copy command |
+> | --- | --- |
+> | macOS / Linux terminal | `cp .env.example .env` |
+> | Git Bash on Windows | `cp .env.example .env` |
+> | Windows PowerShell | `cp .env.example .env` *(alias for `Copy-Item`)* — or `Copy-Item .env.example .env` |
+> | Windows `cmd.exe` | `copy .env.example .env` |
 
-> The ADK is renderer-agnostic and ships no hardcoded list of Platform MCPs or Skills — see [Platform MCPs](#platform-mcps) and [Skills](#skills).
+### 1. Prerequisites
 
----
+Install these once, on the machine where the agent will run:
 
-## Installation
+- **Python ≥ 3.10** with **pip ≥ 21** (for the `pyproject.toml` build system).
+- A valid **AI provider** credential — pick **one**:
+  - **Azure OpenAI** — `AZURE_API_KEY` + `AZURE_API_BASE` + a deployment name
+  - **OpenAI** — `OPENAI_API_KEY`
+  - **Google Gemini** — `GOOGLE_API_KEY`
+  - **Anthropic Claude** — `ANTHROPIC_API_KEY`
+  - **Ollama** — local server, no key needed
+  - **DeepSeek / any OpenAI-compatible endpoint** — via a `CustomProvider` subclass (see [Adding a custom provider](#adding-a-custom-provider-deepseek-in-house-openai-compatible))
+- *(Optional)* **Node.js ≥ 18** + `npx` on `PATH` — only required if you register a Platform MCP that ships as an `npx` package (e.g. the Syncfusion React Platform MCP `@syncfusion/react-mcp@latest`).
+- *(Optional)* A **Syncfusion account API key** ([get one here](https://www.syncfusion.com/account/api-key)) — only when consuming a Syncfusion-published Platform MCP. This is **not a product license**; third-party or in-house Platform MCPs do not require it.
 
-Install the **ADK directly from GitHub** in your own project:
+> **Which provider should I pick?** All six built-in providers (and any `CustomProvider` you register) are available and exercised by the test suite — there is no single "recommended" one. In practice, GPT-class models (Azure OpenAI / OpenAI) tend to produce the fewest validation retries on real prompts, but the ADK is designed to work well with any of them.
+
+### 2. Check out the repo
+
+You only need a checkout if you want to run the **bundled examples** or **contribute to the ADK**. If you just want to use the ADK as a library in your own project, install it straight from GitHub into your own project instead of cloning.
+
+```bash
+git clone https://github.com/syncfusion/syncfusion-a2ui-agent.git
+cd syncfusion-a2ui-agent
+```
+
+### 3. Install the ADK
+
+Pick **one** of the two install paths below — they are mutually exclusive.
+
+**Path A — install the ADK into your own project (most common):**
 
 ```bash
 pip install "git+https://github.com/syncfusion/syncfusion-a2ui-agent.git"
 ```
 
-Install the **dev extras** (pytest, ruff) — only needed if you're running the test suite:
+**Path B — install from your local checkout (when contributing to the ADK):**
 
 ```bash
-pip install "git+https://github.com/syncfusion/syncfusion-a2ui-agent.git#egg=syncfusion-a2ui-agent[dev]"
-```
-
-Install the **ADK from a local source checkout** (when contributing to the ADK itself):
-
-```bash
-git clone https://github.com/syncfusion/syncfusion-a2ui-agent.git
-cd syncfusion-a2ui-agent
 pip install -e ".[dev]"
 ```
 
-The ADK uses the `src/` layout, so after `pip install -e .` the importable package lives at `src/syncfusion_a2ui_agent/`. The example package, by contrast, is installed separately (see [Examples](#examples)).
+The ADK uses the `src/` layout, so after `pip install -e .` the importable package lives at `src/syncfusion_a2ui_agent/`. The example package is installed separately when you run the bundled examples.
 
----
+### 4. Configure credentials
 
-## Configuration
+The bundled examples ship [`examples/.env.example`](examples/.env.example). Copy it to `examples/.env` and fill in your keys. Remember the platform note above — use `cp` on macOS/Linux/Git-Bash, `copy` (or `Copy-Item`) on Windows:
 
-The ADK is a **library**, not an app — it does not ship a `.env` template of its own. You pass provider credentials programmatically (see [Build your own A2UI agent](#build-your-own-a2ui-agent)).
-
-The **examples** do ship an env template; see [Examples](#examples) below.
+```bash
+cd examples
+cp .env.example .env       # then edit .env and paste your real keys
+```
 
 | Variable | Used by | When |
 | --- | --- | --- |
@@ -314,62 +325,21 @@ The **examples** do ship an env template; see [Examples](#examples) below.
 | `Syncfusion_API_Key` | Syncfusion Platform MCPs (e.g. `@syncfusion/react-mcp@latest`) | Only when consuming a Syncfusion-published Platform MCP. Get the value from your [Syncfusion account API keys page](https://www.syncfusion.com/account/api-key) — this is an account-level API key, **not** a product license. |
 | `SKILLS_PATH` | Skill router (in the example agents) | When using local skills |
 
----
+### 5. Run the agent
 
-## Getting started
+Boot the bundled example as an A2A HTTP server. The examples live in [`examples/`](examples/) and are a separate package:
 
-### 1. Minimal agent (Gemini + any Platform MCP)
-
-```python
-# pip install "git+https://github.com/syncfusion/syncfusion-a2ui-agent.git"
-from syncfusion_a2ui_agent import SyncfusionAgent
-
-agent = SyncfusionAgent(
-    model="gemini",                # gemini | openai | azure_openai | claude | ollama | custom subclass
-    api_key="YOUR_GOOGLE_API_KEY",
-)
-
-# Register a Platform MCP for the renderer you target. The ADK does
-# not ship a list of "known" platforms — bring your own. Below is the
-# official Syncfusion React Platform MCP; replace `name` and `command`
-# with whatever your renderer publishes (Blazor, Angular, Vue, MAUI,
-# WPF, WinForms, in-house, …). See the "Platform MCPs" section below.
-agent.add_mcp(
-    name="my-renderer-mcp",        # any name; used to route tool calls
-    command=["npx", "-y", "@your-org/your-renderer-mcp"],
-    kind="platform",               # tag only — never enforced
-    env={
-        "Syncfusion_API_Key": "Your Syncfusion API Key",
-        # "MY_MCP_TOKEN": "...",
-        # "MY_MCP_REGION": "us-east-1",
-        # "MY_MCP_LOG_LEVEL": "info",
-    },
-)
-
-# Warm the MCP tool catalog at boot so the first request doesn't pay a spawn cost
-agent.warm_catalog()
-
-# Subclass to inject your own business prompt
-class MyAgent(SyncfusionAgent):
-    def extend_system_prompt(self) -> str:
-        return "You are an enterprise UI assistant for an HR dashboard."
-
-# Start the A2A server
-my_agent = MyAgent(model="gemini", api_key="YOUR_GOOGLE_API_KEY")
-my_agent.serve(host="0.0.0.0", port=8080)
+```bash
+cd examples
+python -m venv .venv
+.venv\Scripts\activate          # Windows cmd / PowerShell
+# source .venv/bin/activate    # macOS / Linux
+pip install -e .                # installs the examples package
+python generic_demo_agent.py "show a sales dashboard"   # single-shot CLI run
+python flight_booking_agent.py --serve                   # A2A server on :10005
 ```
 
-### 2. Register business data sources (all via MCP)
-
-```python
-# Customer MCP — the only way to expose business data
-agent.add_mcp(name="CRM",          command=["python", "crm_mcp.py"])
-agent.add_mcp(name="OrdersMCP",    command=["node", "orders_server.js"])
-agent.add_mcp(name="InventoryMCP", url="https://mcp.company.com/inventory")
-
-# Or inject a static data set directly (e.g. for demos / tests)
-agent.set_data_source_from_file("path/to/your/data.json")
-```
+You now have a running A2UI agent. Continue with [Examples](#examples) for what each script does and how to drive it from a browser.
 
 ---
 
@@ -388,15 +358,10 @@ The [`examples/`](examples/) directory is a **fully independent package** called
 
 ### Run an example
 
-```bash
-cd examples
-python -m venv .venv
-.venv\Scripts\activate          # or: source .venv/bin/activate
-pip install -e .                # installs the examples package
-cp .env.example .env            # fill in your keys — .env is git-ignored
-python generic_demo_agent.py "show a sales dashboard"   # single-shot
-python flight_booking_agent.py --serve                   # A2A server on :10005
-```
+The exact commands for running these examples are in **5. Run the agent** at the top of this README. Once the agent is up:
+
+- **`generic_demo_agent.py "show a sales dashboard"`** — single-shot CLI run; prints an A2UI envelope.
+- **`flight_booking_agent.py --serve`** — boots the A2A HTTP server on `:10005`; drive it from a browser via [`test-page.html`](examples/test-page.html) or POST a [`send_message.json`](examples/send_message.json) payload.
 ---
 
 ## Adding a custom provider (DeepSeek, in-house, OpenAI-compatible)

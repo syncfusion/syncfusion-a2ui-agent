@@ -18,7 +18,8 @@ Provider note:
     validation retries, we recommend **Azure OpenAI** or **OpenAI** —
     GPT-class models produce the cleanest output on real prompts.
     To switch providers, swap the `AzureOpenAIProvider(...)` call
-    below for the equivalent provider (see README §"Configuration").
+    below for the equivalent provider (see README §"4. Configure credentials"
+    for the per-provider env vars).
 """
 
 from __future__ import annotations
